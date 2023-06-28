@@ -11,6 +11,16 @@ public class Role {
 
 	private ERole name;
 
+	private String roleDesc;
+	
+	public String getRoleDesc() {
+		return roleDesc;
+	}
+
+	public void setRoleDesc(String roleDesc) {
+		this.roleDesc = roleDesc;
+	}
+
 	public String getId() {
 		return id;
 	}
