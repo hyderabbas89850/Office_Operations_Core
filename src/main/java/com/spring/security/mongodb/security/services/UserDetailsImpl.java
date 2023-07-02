@@ -23,16 +23,28 @@ public class UserDetailsImpl implements UserDetails {
 
   @JsonIgnore
   private String password;
+  
+  private String orgId;
+  
 
-  private Collection<? extends GrantedAuthority> authorities;
+	  public String getOrgId() {
+		return orgId;
+	}
+	
+	public void setOrgId(String orgId) {
+		this.orgId = orgId;
+	}
+
+private Collection<? extends GrantedAuthority> authorities;
 
   public UserDetailsImpl(String id, String username, String email, String password,
-      Collection<? extends GrantedAuthority> authorities) {
+      Collection<? extends GrantedAuthority> authorities, String orgId) {
     this.id = id;
     this.username = username;
     this.email = email;
     this.password = password;
     this.authorities = authorities;
+    this.orgId = orgId;
   }
 
   public static UserDetailsImpl build(User user) {
@@ -45,7 +57,8 @@ public class UserDetailsImpl implements UserDetails {
         user.getUsername(), 
         user.getEmail(),
         user.getPassword(), 
-        authorities);
+        authorities,
+        user.getOrgId());
   }
 
   @Override

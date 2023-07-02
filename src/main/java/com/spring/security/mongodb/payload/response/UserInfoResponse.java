@@ -7,12 +7,14 @@ public class UserInfoResponse {
   private String username;
   private String email;
   private List<String> roles;
+  private String orgId;
 
-  public UserInfoResponse(String id, String username, String email, List<String> roles) {
+  public UserInfoResponse(String id, String username, String email, List<String> roles, String orgId) {
     this.id = id;
     this.username = username;
     this.email = email;
     this.roles = roles;
+    this.orgId=orgId;
   }
 
   public String getId() {
@@ -42,4 +44,14 @@ public class UserInfoResponse {
   public List<String> getRoles() {
     return roles;
   }
+
+public String getOrgId() {
+	return orgId;
+}
+
+public void setOrgId(String orgId) {
+	this.orgId = orgId;
+}
+  
+  
 }

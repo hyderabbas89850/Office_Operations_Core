@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.spring.security.mongodb.dao.UserDao;
 import com.spring.security.mongodb.models.ERole;
 import com.spring.security.mongodb.models.Role;
 import com.spring.security.mongodb.models.User;
@@ -44,6 +45,9 @@ public class AuthController {
 
   @Autowired
   UserRepository userRepository;
+
+  @Autowired
+  UserDao userDao;
 
   @Autowired
   RoleRepository roleRepository;
@@ -76,10 +80,10 @@ public class AuthController {
 					.collect(Collectors.toList());
 
 			return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(new UserInfoResponse(
-					userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), roles));
+					userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), roles, userDetails.getOrgId()));
 			
 	}
-
+	
   @PostMapping("/signup")
   public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
     if (userRepository.existsByUsername(signUpRequest.getUsername())) {
@@ -93,11 +97,20 @@ public class AuthController {
           .badRequest()
           .body(new MessageResponse("Error: Email is already in use!"));
     }
-
+    
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    User loggedUserDet =  userDao.findUsername(auth.getName());
+    if(loggedUserDet == null) {
+    	return ResponseEntity
+    	          .badRequest()
+    	          .body(new MessageResponse("Error: Organization details missing!"));
+    }
+    
+    
     // Create new user's account
     User user = new User(signUpRequest.getUsername(), 
                          signUpRequest.getEmail(),
-                         encoder.encode(signUpRequest.getPassword()));
+                         encoder.encode(signUpRequest.getPassword()),loggedUserDet.getOrgId());
    // Set<String> roleSet = new HashSet<>();roleSet.add("admin");
     //signUpRequest.setRoles(roleSet);
     Set<String> strRoles = signUpRequest.getRoles();

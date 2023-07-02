@@ -30,14 +30,36 @@ public class User {
 
 	@NotBlank
 	private Set<Role> roles = new HashSet<>();
+	
+	@NotBlank
+	@Size(max = 50)
+	private String orgId;
+	
+	private boolean markAsDelete;
+
+	public boolean isMarkAsDelete() {
+		return markAsDelete;
+	}
+
+	public void setMarkAsDelete(boolean markAsDelete) {
+		this.markAsDelete = markAsDelete;
+	}
+
+	public String getOrgId() {
+		return orgId;
+	}
+
+	public void setOrgId(String orgId) {
+		this.orgId = orgId;
+	}
 
 	public User() {
 	}
 
-	public User(String username, String email, String password) {
+	public User(String username, String email, String password, String orgId) {
 		this.username = username;
 		this.email = email;
-		this.password = password;
+		this.password = password;this.orgId = orgId;
 	}
 
 	public String getId() {
